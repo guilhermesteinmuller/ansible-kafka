@@ -1,0 +1,4 @@
+---
+
+init_service: systemd
+zookeeper_dependencies: default-jre-headless

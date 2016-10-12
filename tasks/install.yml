@@ -1,6 +1,61 @@
 ---
-- name: Install OpenJDK
-  apt: name=openjdk-7-jre-headless state=present
 
-- name: Fetch kafka binary package
-  get_url: dest="{{ kafka_tarball_location }}/{{ kafka_tarball_name }}" url="{{apache_mirror}}/kafka/{{kafka_version}}/{{kafka_tarball_name}}"
+- name: Install Systems Requirements
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - '{{ zookeeper_dependencies }}'
+
+- name: Create Distribution directory
+  file:
+    path: "{{ dist_dir }}"
+    state: directory
+    mode: 0755
+
+- name: Add a kafka user with temp sudo permissions
+  user:
+    name: kafka
+    comment: "Apache Kafka Service"
+    append: yes
+  register: create_kafka_user
+  until: create_kafka_user | success
+  retries: 5
+  delay: 2
+
+- name: Download Apache Kafka
+  get_url:
+    url: "{{ apache_mirror }}/kafka/{{ base_kafka_version }}/{{ kafka_version }}.tgz"
+    dest: "/root/{{ kafka_version }}.tgz"
+    mode: 0600
+  register: download_kafka_binary
+  until: download_kafka_binary | success
+  retries: 5
+  delay: 5
+
+- name: Extract Apache Kafka archive
+  unarchive:
+    src: "/root/{{ kafka_version }}.tgz"
+    dest: "{{ dist_dir }}"
+    creates: "{{ dist_dir }}/{{ kafka_version }}"
+    owner: kafka
+    copy: no
+  register: extract_binary
+  until: extract_binary | success
+  retries: 5
+  delay: 3
+
+- name: Link installed kafka to /opt/kafka
+  file:
+    src: "{{ dist_dir }}/{{ kafka_version }}"
+    path: "{{ kafka_dir }}"
+    state: link
+
+- name: Create kafka log directory
+  file:
+    path: "{{ item }}"
+    owner: kafka
+    state: directory
+  with_items:
+    - "{{ kafka_log_dir }}"
+    - "{{ kafka_data_dir }}"

@@ -1,4 +1,14 @@
 ---
 - name: restart kafka
-  service: name=kafka state=restarted enabled=yes
-  when: run_mode == 'Deploy'
+  service:
+    name: kafka
+    state: restarted
+
+- name: reload systemd
+  command: systemctl daemon-reload
+
+#- name: Reload systemd
+#  systemd:
+#    daemon_reload: yes
+#  when: init_service == 'systemd'
+

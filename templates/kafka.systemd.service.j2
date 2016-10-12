@@ -1,0 +1,18 @@
+[Unit]
+Description=Kafka
+Before=
+Requires=zookeeper.service
+After=network.target
+
+[Service]
+Type=simple
+User=kafka
+WorkingDirectory={{ kafka_dir }}
+PermissionsStartOnly=true
+ExecStartPre=/bin/mkdir -p /var/run/kafka
+ExecStartPre=/bin/chown -R kafka:kafka /var/run/kafka
+ExecStart={{ kafka_dir }}/bin/kafka-server-start.sh {{ kafka_dir }}/config/server.properties
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
