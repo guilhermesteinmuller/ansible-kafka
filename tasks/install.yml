@@ -5,7 +5,7 @@
     name: '{{ item }}'
     state: present
   with_items:
-    - '{{ zookeeper_dependencies }}'
+    - '{{ kafka_dependencies }}'
 
 - name: Create Distribution directory
   file:

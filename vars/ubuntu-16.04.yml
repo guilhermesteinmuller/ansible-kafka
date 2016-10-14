@@ -1,4 +1,3 @@
 ---
 
-init_service: systemd
-zookeeper_dependencies: default-jre-headless
+kafka_dependencies: default-jre-headless

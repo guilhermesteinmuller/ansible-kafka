@@ -1,4 +1,3 @@
 ---
 
-init_service: upstart
-zookeeper_dependencies: openjdk-7-jre-headless
+kafka_dependencies: openjdk-7-jre-headless
