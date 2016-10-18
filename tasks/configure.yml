@@ -18,7 +18,7 @@
     mode: 0644
   notify:
     - reload systemd
-  when: ansible_service_mgr == 'upstart'
+  when: ansible_service_mgr == 'systemd'
 
 - name: Copy Kafka server-start
   template:
