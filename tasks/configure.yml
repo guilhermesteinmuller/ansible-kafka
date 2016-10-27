@@ -30,6 +30,25 @@
   notify:
     - restart kafka
 
+- name: Copy Kafka init script
+  template:
+    src: kafka.upstart.conf.j2
+    dest: "/etc/init/kafka.conf"
+    mode: "0644"
+    owner: "root"
+    group: "root"
+  register: upstart_init
+  notify:
+    - restart kafka
+  when: ansible_service_mgr == 'upstart'
+
+- name: Reload init scripts
+  shell: |
+    initctl reload-configuration
+  when: upstart_init | changed
+  notify:
+    - restart kafka
+
 - name: Copy Kafka log4.properties
   template:
     src: log4j.properties.j2
