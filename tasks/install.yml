@@ -1,7 +1,7 @@
 ---
 
 - name: Install Systems Requirements
-  apt:
+  package:
     name: '{{ item }}'
     state: present
   with_items:
@@ -20,6 +20,14 @@
     append: yes
   register: create_kafka_user
   until: create_kafka_user | success
+  retries: 5
+  delay: 2
+
+- name: Create the kafka group
+  group:
+    name: kafka
+    state: "present"
+    system: "yes"
   retries: 5
   delay: 2
 
