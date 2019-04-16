@@ -2,7 +2,7 @@
 dist_dir: /opt/dist
 apache_mirror: http://ftp.unicamp.br/pub/apache
 
-base_kafka_version: "0.10.2.2"
+base_kafka_version: "2.2.0"
 kafka_version: "kafka_2.11-{{ base_kafka_version }}"
 kafka_heap_opts: "-Xmx1G -Xms1G"
 
